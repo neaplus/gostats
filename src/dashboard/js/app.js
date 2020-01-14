@@ -37,7 +37,7 @@
 	};
 
 	var json_i18n = {
-		"version": "0.1.20",
+		"version": "20.0115",
 		"theme": "Theme",
 		"bright": "Bright",
 		"dark_gray": "Dark Gray",
@@ -69,6 +69,7 @@
 		"thead": "Overall Analyzed Requests",
 		"disconnected": "Disconnected",
 		"connected": "Connected",
+		"reconnecting": "Reconnecting",
 		"realtime": "Now",
 	};
 
@@ -114,23 +115,38 @@
 			return panel ? this.AppData[panel] : this.AppData;
 		},
 
+		kill: function () {
+			GoStats.AppWSConn.online = false;
+			GoStats.Nav.WSClose();
+
+			if (GoStats.AppWSConn.socket && GoStats.AppWSConn.socket.readyState) {
+				GoStats.AppWSConn.socket.close();
+			}
+
+			delete GoStats.AppWSConn.socket;
+		},
+
+		resetWebSocket: function () {
+			GoStats.AppWSConn.online = false;
+			GoStats.Nav.WSTry();
+
+			setTimeout(function () { GoStats.setWebSocket(); }, 333);
+		},
+
 		setWebSocket: function () {
 			let dial = (window.location.protocol === "https:" ? 'wss://' : 'ws://');
-			if (GoStats.AppWSConn.credentials.length > 0) {
-				// dial += `${GoStats.AppWSConn.credentials[0]}:${GoStats.AppWSConn.credentials[1]}@`;
-			}
 			dial += window.location.hostname + (window.location.port ? ":" + window.location.port : "") + "/ws";
 			if (GoStats.AppWSConn.credentials.length > 0) {
 				dial += `?auth=${GoStats.AppWSConn.credentials[0]}`;
 			}
 
-			const socket = new WebSocket(dial);
-			socket.onopen = function (event) {
+			GoStats.AppWSConn.socket = new WebSocket(dial);
+			GoStats.AppWSConn.socket.onopen = function (event) {
 				GoStats.AppWSConn.online = true;
 				GoStats.Nav.WSOpen();
 			}.bind(this);
 
-			socket.onmessage = function (event) {
+			GoStats.AppWSConn.socket.onmessage = function (event) {
 				this.AppState['updated'] = true;
 
 				try {
@@ -149,12 +165,11 @@
 				} catch {}
 			}.bind(this);
 
-			socket.onclose = function (event) {
+			GoStats.AppWSConn.socket.onclose = function (event) {
 				GoStats.AppWSConn.online = false;
 				GoStats.Nav.WSClose();
 			}.bind(this);
 
-			GoStats.AppWSConn.socket = socket;
 			GoStats.AppWSConn.send = function (payload) {
 				if (!GoStats.AppWSConn.socket || !GoStats.AppWSConn.online || !payload) {
 					return;
@@ -571,6 +586,13 @@
 			$$('.report-title', (item) => item.innerText = GoStats.i18n.connected);
 		},
 
+		WSTry: function () {
+			$$('.nav-ws-status', function (item) {
+				item.setAttribute('title', GoStats.i18n.reconnecting);
+			});
+			$$('.report-title', (item) => item.innerText = GoStats.i18n.reconnecting);
+		},
+
 		// Render left-hand side navigation given the available panels.
 		renderWrap: function (nav) {
 			$('nav').innerHTML = GoStats.AppTpls.Nav.wrap.render(GoStats.i18n);
@@ -641,7 +663,6 @@
 		},
 	};
 
-	// Adds the visibilitychange EventListener
 	document.addEventListener('visibilitychange', function () {
 		// fires when user switches tabs, apps, etc.
 		if (document.visibilityState === 'hidden')
@@ -652,6 +673,15 @@
 			var hasFocus = GoStats.App.hasFocus;
 			GoStats.App.hasFocus = true;
 			hasFocus || GoStats.App.renderData();
+		}
+
+		if (document.visibilityState === 'visible' &&
+			(!GoStats.AppWSConn.socket || GoStats.AppWSConn.socket.readyState > 1)) {
+			GoStats.resetWebSocket()
+		}
+		if (document.visibilityState === 'hidden' &&
+			GoStats.AppWSConn.socket.readyState <= 1) {
+			GoStats.kill();
 		}
 	});
 

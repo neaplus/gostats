@@ -43,3 +43,6 @@ NONE
 - clickable boxes links to domain
 - selectable boxes to highlight domain
 - a-z / 0-9 sorting option
+- cache control for stats.js
+- bundle build scripts
+- view options for grid cell (display, hide, etc)

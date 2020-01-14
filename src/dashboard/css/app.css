@@ -35,15 +35,18 @@ h3 {
 }
 .powered {
 	bottom: 159px;
-	color: #9E9E9E;
+	color: #696969;
 	font-size: smaller;
 	position: absolute;
 	right: 20px;
 	transform-origin: 100% 0;
 	transform: rotate(-90deg);
+	font-size: 11px;
+	font-family: Verdana, sans-serif;
 }
 .powered a {
-	color: #636363;
+	color: #9E9E9E;
+	letter-spacing: 1px;
 }
 .powered span {
 	color: #007bc3;
@@ -987,4 +990,93 @@ html.dark.purple,
 }
 .dark.purple .line1 {
 	stroke: #d048b6;
+}
+
+
+.shimmer {
+	padding: 0 333px 0 0;
+	display: inline;
+	color: rgba(255, 255, 255, 0.1);
+	background: -webkit-gradient(linear, left top, right top, from(#222), to(#222), color-stop(0.5, #fff));
+	background: -moz-gradient(linear, left top, right top, from(#222), to(#222), color-stop(0.5, #fff));
+	background: gradient(linear, left top, right top, from(#222), to(#222), color-stop(0.5, #fff));
+	-webkit-background-size: 125px 100%;
+	-moz-background-size: 125px 100%;
+	background-size: 125px 100%;
+	-webkit-background-clip: text;
+	-moz-background-clip: text;
+	background-clip: text;
+	-webkit-animation-name: shimmer;
+	-moz-animation-name: shimmer;
+	animation-name: shimmer;
+	-webkit-animation-duration: 2s;
+	-moz-animation-duration: 2s;
+	animation-duration: 2s;
+	-webkit-animation-iteration-count: infinite;
+	-moz-animation-iteration-count: infinite;
+	animation-iteration-count: infinite;
+	background-repeat: no-repeat;
+	background-position: 0 0;
+	background-color: #222;
+}
+
+@-moz-keyframes shimmer {
+	0% {
+		background-position: top left;
+	}
+
+	100% {
+		background-position: top right;
+	}
+}
+
+@-webkit-keyframes shimmer {
+	0% {
+		background-position: top left;
+	}
+
+	100% {
+		background-position: top right;
+	}
+}
+
+@-o-keyframes shimmer {
+	0% {
+		background-position: top left;
+	}
+
+	100% {
+		background-position: top right;
+	}
+}
+
+@keyframes shimmer {
+	0% {
+		background-position: top left;
+	}
+
+	100% {
+		background-position: top right;
+	}
+}
+
+.anim {
+	position: relative;
+	overflow: hidden;
+	background: linear-gradient(90deg, #777, #fff, #999);
+	background-repeat: no-repeat;
+	background-size: 80%;
+	animation: animate 3s linear infinite;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: #eeeeee82;
+}
+
+@keyframes animate {
+	0% {
+		background-position: -500%;
+	}
+
+	100% {
+		background-position: 500%;
+	}
 }

@@ -99,11 +99,12 @@ func Latest() StatusData {
 	r.Flush()
 	result.Domains, _ = redis.Strings(redis.MultiBulk(r.Receive()))
 
-	var keys []string
 	for _, d := range result.Domains {
 		var key = d + "_" + result.Timestamp.Format("20060102")
-		result.Total[d], _ = redis.Int(r.Do("GET", key))
-		keys = append(keys, key)
+		val, _ := redis.Int(r.Do("GET", key))
+		if val > 0 {
+			result.Total[d] = val
+		}
 	}
 
 	reply, err := redis.Values(r.Do("SCAN", 0, "MATCH", "*:*", "COUNT", 1000000))
