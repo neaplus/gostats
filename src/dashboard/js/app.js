@@ -71,6 +71,7 @@
 		"connected": "Connected",
 		"reconnecting": "Reconnecting",
 		"realtime": "Now",
+		"totalsessions": "Total Sessions",
 	};
 
 	window.GoStats = window.GoStats || {
@@ -88,6 +89,7 @@
 				'layout': 'horizontal',
 				'perPage': 24,
 				'theme': 'darkPurple',
+				'total': true,
 			};
 			this.AppPrefs = GoStats.Util.merge(this.AppPrefs, this.opts.prefs);
 
@@ -499,6 +501,12 @@
 					this.setLayout('vertical');
 				}.bind(this);
 			}.bind(this));
+
+			$$('.total-sessions', function (item) {
+				item.onclick = function (e) {
+					this.switchVisibility('.total', !GoStats.AppPrefs.total);
+				}.bind(this);
+			}.bind(this));
 		},
 
 		downloadJSON: function (e) {
@@ -506,6 +514,12 @@
 			var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(GoStats.getPanelData()));
 			targ.href = 'data:' + data;
 			targ.download = 'gostats-' + (+new Date()) + '.json';
+		},
+
+		switchVisibility: function (container, state) {
+			GoStats.AppPrefs['total'] = state;
+			$(container).style.display = state ? 'block' : 'none';
+			GoStats.setPrefs();
 		},
 
 		setLayout: function (layout) {
@@ -557,7 +571,11 @@
 			var o = {};
 			o[this.getLayout()] = true;
 			o[this.getTheme()] = true;
+			if (GoStats.AppPrefs.total) {
+				o['total'] = true
+			}
 			o['labels'] = GoStats.i18n;
+
 			$('.nav-list').innerHTML = GoStats.AppTpls.Nav.opts.render(o);
 			$('nav').classList.toggle('active');
 			this.events();
@@ -639,6 +657,10 @@
 			if (GoStats.AppPrefs['layout'] == 'horizontal') {
 				$('.container').classList.add('container-fluid');
 				$('.container-fluid').classList.remove('container');
+			}
+
+			if (!GoStats.AppPrefs['total']) {
+				$('.total').style.display = 'none';
 			}
 		},
 

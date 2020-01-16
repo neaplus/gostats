@@ -83,9 +83,9 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Use(serverHeaderMiddleware)
-	e.Use(BasicAuthentication())
 	// public static file server
 	e.Static("/", "public")
+	e.Use(BasicAuthentication())
 	/* Endpoints */
 	e.GET("/", bannerHandler)
 	e.GET("/check", check)

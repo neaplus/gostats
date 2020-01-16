@@ -8,10 +8,10 @@ import (
 )
 
 var (
-	usr       = "admin"
-	pwd       = "secret"
-	secret    string
-	pubRoutes = []string{"/check", "/update"}
+	usr          = "admin"
+	pwd          = "secret"
+	secret       string
+	secureRoutes = []string{"/status", "/monit"}
 )
 
 // BasicAuthentication for dashboard
@@ -22,12 +22,12 @@ func BasicAuthentication() echo.MiddlewareFunc {
 			if secret == c.Request().URL.Query().Get("auth") {
 				return true
 			}
-			for _, v := range pubRoutes {
-				if c.Path() == "/" || strings.Contains(c.Path(), v) {
-					return true
+			for _, v := range secureRoutes {
+				if strings.Contains(c.Path(), v) {
+					return false
 				}
 			}
-			return false
+			return true
 		},
 		Validator: func(username, password string, c echo.Context) (bool, error) {
 			return username == usr && password == pwd, nil

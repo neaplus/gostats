@@ -41,8 +41,8 @@
 								</span>
 							</h4>
 						</div>
-						<h1 class="shimmer">
-							<span class="hidden-xs hidden-sm">
+						<h1>
+							<span class="hidden-xs hidden-sm shimmer">
 								<i class="fa fa-tachometer"></i> GOSTATS
 							</span>
 							<span class="visible-xs visible-sm">
@@ -119,6 +119,11 @@
 			</li>
 		</ul>
 		<h3><i class="fa fa-cog"></i> {{labels.other_opts}}</h3>
+		<ul>
+			<li {{#total}}class="active"{{/total}}>
+				<a href="javascript:void(0);" class="total-sessions"><i class="fa fa-circle{{^total}}-o{{/total}}"></i> {{labels.totalsessions}}</a>
+			</li>
+		</ul>
 	</script>
 </body>
 
