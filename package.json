@@ -1,0 +1,25 @@
+{
+  "name": "gostats",
+  "version": "1.0.0",
+  "description": "Online visitors monitoring for multiple websites with nice and realtime dashboard",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neaplus/gostats.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/neaplus/gostats/issues"
+  },
+  "homepage": "https://github.com/neaplus/gostats#readme",
+  "devDependencies": {
+  }
+}
