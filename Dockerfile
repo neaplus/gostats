@@ -1,5 +1,5 @@
 FROM golang:alpine AS build-env
-RUN apk --no-cache add build-base git bzr mercurial gcc
+RUN apk --no-cache add git
 ADD . /build
 RUN cd /build/src && go get -v -d ./...
 RUN cd /build && go build -v -o gostats src/*.go
