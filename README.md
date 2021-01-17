@@ -20,13 +20,17 @@ Online visitors monitoring for multiple websites with nice and realtime dashboar
 ```
 $ docker run --name redis -d -p 6379:6379 redis:alpine 
 $ docker run --rm --name gostats --link redis \
-    -e REDIS_URL="redis:6379" -p 8000:8000 gostats
+    -e REDIS_URL="redis:6379" -p 8000:8000 neaplus/gostats
 ```
 [gostats docker hub](https://hub.docker.com/r/neaplus/gostats)
 
 ### development
 ```
-Dev Server
+Make sure you have go installed, then install gow package
+$ go get -u github.com/mitranim/gow
+
+then run this for:
+Dev Server on (http://localhost:8000/)
 $ ./_dev.sh
 
 Containerization
@@ -46,3 +50,10 @@ NONE
 - cache control for stats.js
 - bundle build scripts
 - view options for grid cell (display, hide, etc)
+
+#
+## Show me Screenshots
+
+![Main](test/sample_ss1_main.png)
+
+![Menu](test/sample_ss2_menu.png)

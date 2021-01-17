@@ -1,6 +1,8 @@
 package main
 
 import (
+	"html"
+	"bytes"
 	"flag"
 	"fmt"
 	"log"
@@ -87,7 +89,7 @@ func main() {
 	e.Static("/", "public")
 	e.Use(BasicAuthentication())
 	/* Endpoints */
-	e.GET("/", bannerHandler)
+	e.GET("/", welcomeHandler)
 	e.GET("/check", check)
 	e.GET("/update", hit)
 	e.GET("/status", status)
@@ -101,8 +103,16 @@ func main() {
 	e.Logger.Fatal(e.Start(*addr))
 }
 
-func bannerHandler(c echo.Context) error {
-	return c.String(http.StatusOK, banner)
+func welcomeHandler(c echo.Context) error {
+	var buf bytes.Buffer
+	buf.WriteString("<pre>")
+	buf.WriteString(banner + strings.Repeat("=", 42))
+	buf.WriteString("\n\nTracking Script: ")
+	buf.WriteString(html.EscapeString("<script async id=\"gos\" src=\"https://[gostats.server.address]/update\"></script>\r\n"))
+	buf.WriteString(`<br/>Go to <a href="/monit">Dashboard</a>`)
+	buf.WriteString(`<br/>Go to <a href="/status">Status API</a>`)
+	buf.WriteString("</pre>")
+	return c.HTMLBlob(http.StatusOK, buf.Bytes())
 }
 
 func serverHeaderMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
